@@ -116,6 +116,21 @@
     }
 
     /**
+     * do NO rendering when:
+     * 1) if the gesture is not pinch in or pinch out
+     * 2) if the prototype is not displayed
+     * 2) if the target do not contain a "transition" class
+     * @param ev
+     * @returns {boolean}
+     */
+    function canRendering(ev) {
+        if(ev.touches.length == 1) return false;
+        if(document.getElementsByClassName("preview").length < 1) return false;
+        if(ev.target.className.indexOf("transition") < 0) return false;
+        return true;
+    }
+
+    /**
      * disable mouseevents on the page
      * @param ev
      */
@@ -268,8 +283,7 @@
     function showTouches(ev) {
         var touch, i, el, styles;
 
-        // do NO rendering if the gesture is not pinch in or pinch out
-        if(ev.touches.length != 1){
+        if(canRendering(ev)){
             for(i = 0; i < ev.touches.length; i++) {
                 touch = ev.touches[i];
                 el = touchElements[touch.identifier];
