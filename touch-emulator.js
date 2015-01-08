@@ -126,7 +126,7 @@
     function canRendering(ev) {
         if(ev.touches.length == 1) return false;
         if(document.getElementsByClassName("preview").length < 1) return false;
-        if(ev.target.className.indexOf("transition") < 0) return false;
+        if((ev.target.className.indexOf("transition") < 0)&&(ev.target.tagName != "IMG")) return false;
         return true;
     }
 
@@ -135,7 +135,6 @@
      * @param ev
      */
     function preventMouseEvents(ev) {
-        // console.log(ev, "event original");
         // ev.preventDefault();
         // ev.stopPropagation();
     }
@@ -211,8 +210,6 @@
         touchEvent.changedTouches = getChangedTouches(mouseEv, eventName);
 
         eventTarget.dispatchEvent(touchEvent);
-        // console.log(touchEvent, "touchEvent");
-        // console.log(eventTarget, "eventTarget");
     }
 
     /**
@@ -312,6 +309,9 @@
                     delete touchElements[touch.identifier];
                     // show real cursor
                     document.body.classList.remove("no-cursor");
+                    if(shiftPressing){
+                        document.body.classList.add("two-point-cursor");
+                    }
                 }
             }
         }
@@ -399,11 +399,14 @@
         }
     };
 
+    var shiftPressing = false;
+
     // show fake pinch cursor when shift key is pressed
     document.body.onkeydown = function(event){
         event = event || window.event;
         var keycode = event.charCode || event.keyCode;
         if(keycode === 16){
+            shiftPressing = true;
             document.body.classList.add("two-point-cursor");
         }
     }
@@ -412,6 +415,7 @@
         event = event || window.event;
         var keycode = event.charCode || event.keyCode;
         if(keycode === 16){
+            shiftPressing = false;
             document.body.classList.remove("two-point-cursor");
         }
     }
