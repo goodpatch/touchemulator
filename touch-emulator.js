@@ -292,6 +292,7 @@
                     document.body.appendChild(el);
                     // hide real cursor when pinch in or pinch out
                     document.body.classList.add("no-cursor");
+                    document.body.classList.remove("two-point-cursor");
                 }
 
                 styles = TouchEmulator.template(touch);
@@ -397,6 +398,23 @@
             zIndex: 999999
         }
     };
+
+    // show fake pinch cursor when shift key is pressed
+    document.body.onkeydown = function(event){
+        event = event || window.event;
+        var keycode = event.charCode || event.keyCode;
+        if(keycode === 16){
+            document.body.classList.add("two-point-cursor");
+        }
+    }
+
+    document.body.onkeyup = function(event){
+        event = event || window.event;
+        var keycode = event.charCode || event.keyCode;
+        if(keycode === 16){
+            document.body.classList.remove("two-point-cursor");
+        }
+    }
 
     // export
     if (typeof define == "function" && define.amd) {
