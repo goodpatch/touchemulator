@@ -321,11 +321,33 @@
         window.addEventListener("mouseout", preventMouseEvents, true);
         window.addEventListener("mouseover", preventMouseEvents, true);
 
-        // it uses itself!
         window.addEventListener("touchstart", showTouches, false);
         window.addEventListener("touchmove", showTouches, false);
         window.addEventListener("touchend", showTouches, false);
         window.addEventListener("touchcancel", showTouches, false);
+    }
+
+    /**
+     * destroy TouchEmulator
+     */
+    TouchEmulator.destroy = function() {
+        if (hasTouchSupport()) {
+            return;
+        }
+
+        window.removeEventListener("mousedown", onMouse('touchstart'), true);
+        window.removeEventListener("mousemove", onMouse('touchmove'), true);
+        window.removeEventListener("mouseup", onMouse('touchend'), true);
+
+        window.removeEventListener("mouseenter", preventMouseEvents, true);
+        window.removeEventListener("mouseleave", preventMouseEvents, true);
+        window.removeEventListener("mouseout", preventMouseEvents, true);
+        window.removeEventListener("mouseover", preventMouseEvents, true);
+
+        window.removeEventListener("touchstart", showTouches, false);
+        window.removeEventListener("touchmove", showTouches, false);
+        window.removeEventListener("touchend", showTouches, false);
+        window.removeEventListener("touchcancel", showTouches, false);
     }
 
     // start distance when entering the multitouch mode
