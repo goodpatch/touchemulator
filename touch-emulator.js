@@ -104,9 +104,15 @@
      * @returns {boolean}
      */
     function hasTouchSupport() {
-        return ("ontouchstart" in window) || // touch events
-               (window.Modernizr && window.Modernizr.touch) || // modernizr
-               (navigator.msMaxTouchPoints || navigator.maxTouchPoints) > 2; // pointer events
+        // return ("ontouchstart" in window) || // touch events
+        //        (window.Modernizr && window.Modernizr.touch) || // modernizr
+        //        (navigator.msMaxTouchPoints || navigator.maxTouchPoints) > 2; // pointer events
+        try {
+            document.createEvent("TouchEvent");
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
     /**
@@ -114,8 +120,9 @@
      * @param ev
      */
     function preventMouseEvents(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
+        // console.log(ev, "event original");
+        // ev.preventDefault();
+        // ev.stopPropagation();
     }
 
     /**
@@ -189,6 +196,8 @@
         touchEvent.changedTouches = getChangedTouches(mouseEv, eventName);
 
         eventTarget.dispatchEvent(touchEvent);
+        // console.log(touchEvent, "touchEvent");
+        // console.log(eventTarget, "eventTarget");
     }
 
     /**
@@ -259,18 +268,22 @@
     function showTouches(ev) {
         var touch, i, el, styles;
 
-        // first all visible touches
-        for(i = 0; i < ev.touches.length; i++) {
-            touch = ev.touches[i];
-            el = touchElements[touch.identifier];
-            if(!el) {
-                el = touchElements[touch.identifier] = document.createElement("div");
-                document.body.appendChild(el);
-            }
+        // do NO rendering if the gesture is not pinch in or pinch out
+        if(ev.touches.length != 1){
+            for(i = 0; i < ev.touches.length; i++) {
+                touch = ev.touches[i];
+                el = touchElements[touch.identifier];
+                if(!el) {
+                    el = touchElements[touch.identifier] = document.createElement("div");
+                    document.body.appendChild(el);
+                    // hide real cursor when pinch in or pinch out
+                    document.body.classList.add("no-cursor");
+                }
 
-            styles = TouchEmulator.template(touch);
-            for(var prop in styles) {
-                el.style[prop] = styles[prop];
+                styles = TouchEmulator.template(touch);
+                for(var prop in styles) {
+                    el.style[prop] = styles[prop];
+                }
             }
         }
 
@@ -282,6 +295,8 @@
                 if(el) {
                     el.parentNode.removeChild(el);
                     delete touchElements[touch.identifier];
+                    // show real cursor
+                    document.body.classList.remove("no-cursor");
                 }
             }
         }
@@ -314,7 +329,7 @@
     }
 
     // start distance when entering the multitouch mode
-    TouchEmulator.multiTouchOffset = 75;
+    TouchEmulator.multiTouchOffset = 30;
 
     /**
      * css template for the touch rendering
@@ -322,16 +337,14 @@
      * @returns object
      */
     TouchEmulator.template = function(touch) {
-        var size = 30;
+        var size = 36;
         var transform = 'translate('+ (touch.clientX-(size/2)) +'px, '+ (touch.clientY-(size/2)) +'px)';
         return {
-            position: 'fixed',
+            position: 'absolute',
             left: 0,
             top: 0,
-            background: '#fff',
-            border: 'solid 1px #999',
-            opacity: .6,
-            borderRadius: '100%',
+            background: 'url("../images/touch@2x.png") center center no-repeat',
+            backgroundSize: '36px 36px',
             height: size + 'px',
             width: size + 'px',
             padding: 0,
@@ -344,7 +357,8 @@
             userSelect: 'none',
             webkitTransform: transform,
             mozTransform: transform,
-            transform: transform
+            transform: transform,
+            zIndex: 999999
         }
     };
 
