@@ -124,9 +124,15 @@
      * @returns {boolean}
      */
     function canRendering(ev) {
-        if(ev.touches.length == 1) return false;
-        if(document.getElementsByClassName("preview").length < 1) return false;
-        if((ev.target.className.indexOf("transition") < 0)&&(ev.target.tagName != "IMG")) return false;
+        if(ev.touches.length == 1){
+            return false;
+        }
+        if(document.getElementsByClassName("preview").length < 1){
+            return false;
+        }
+        if((ev.target.className.indexOf("transition") < 0)&&(ev.target.tagName != "IMG")){
+            return false;
+        }
         return true;
     }
 
@@ -210,6 +216,8 @@
         touchEvent.changedTouches = getChangedTouches(mouseEv, eventName);
 
         eventTarget.dispatchEvent(touchEvent);
+        // console.log(touchEvent, "touchEvent");
+        // console.log(eventTarget, "eventTarget");
     }
 
     /**
@@ -363,7 +371,7 @@
         window.removeEventListener("touchmove", showTouches, false);
         window.removeEventListener("touchend", showTouches, false);
         window.removeEventListener("touchcancel", showTouches, false);
-    }
+    };
 
     // start distance when entering the multitouch mode
     TouchEmulator.multiTouchOffset = 30;
@@ -409,7 +417,7 @@
             shiftPressing = true;
             document.body.classList.add("two-point-cursor");
         }
-    }
+    };
 
     document.body.onkeyup = function(event){
         event = event || window.event;
@@ -418,7 +426,7 @@
             shiftPressing = false;
             document.body.classList.remove("two-point-cursor");
         }
-    }
+    };
 
     // export
     if (typeof define == "function" && define.amd) {
