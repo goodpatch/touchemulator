@@ -388,7 +388,7 @@
             position: 'absolute',
             left: 0,
             top: 0,
-            background: 'url("../images/touch@2x.png") center center no-repeat',
+            background: 'url("./images/touch@2x.png") center center no-repeat',
             backgroundSize: '36px 36px',
             height: size + 'px',
             width: size + 'px',
