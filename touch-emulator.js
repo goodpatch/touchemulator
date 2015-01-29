@@ -4,6 +4,7 @@
     var isMultiTouch = false;
     var multiTouchStartPos;
     var eventTarget;
+    var onMouseEnable = true;
     var touchElements = {};
 
     // polyfills
@@ -152,6 +153,10 @@
      */
     function onMouse(touchType) {
         return function(ev) {
+            if (onMouseEnable === false) {
+                return;
+            }
+
             // prevent mouse events
             preventMouseEvents(ev);
 
@@ -342,6 +347,8 @@
             return;
         }
 
+        onMouseEnable = true;
+
         fakeTouchSupport();
 
         window.addEventListener("mousedown", onMouse('touchstart'), true);
@@ -366,6 +373,8 @@
         if (hasTouchSupport()) {
             return;
         }
+
+        onMouseEnable = false;
 
         window.removeEventListener("mousedown", onMouse('touchstart'), true);
         window.removeEventListener("mousemove", onMouse('touchmove'), true);
