@@ -193,6 +193,14 @@
                 multiTouchStartPos = null;
                 isMultiTouch = false;
                 eventTarget = null;
+                if (Object.keys(touchElements).length > 0) {
+                    for(var k in touchElements) {
+                      document.body.removeChild(touchElements[k])
+                    }
+                    touchElements = {}
+                }
+                document.body.classList.remove("no-cursor");
+                document.body.classList.remove("two-point-cursor");
             }
         }
     }
@@ -294,6 +302,7 @@
                 el = touchElements[touch.identifier];
                 if(!el) {
                     el = touchElements[touch.identifier] = document.createElement("div");
+                    el.className = "touch-pointer" // Shiftキーで現れるカーソル用のクラス
                     document.body.appendChild(el);
                     // hide real cursor when pinch in or pinch out
                     document.body.classList.add("no-cursor");
