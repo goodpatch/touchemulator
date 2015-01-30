@@ -216,6 +216,9 @@
      * @param mouseEv
      */
     function triggerTouch(eventName, mouseEv) {
+        if (eventName === "touchend" && eventTarget.className.split(" ").indexOf("transition") < 0) {
+            return
+        }
         var touchEvent = document.createEvent('Event');
         touchEvent.initEvent(eventName, true, true);
 
