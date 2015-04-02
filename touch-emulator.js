@@ -232,6 +232,8 @@
         touchEvent.changedTouches = getChangedTouches(mouseEv, eventName);
 
         eventTarget.dispatchEvent(touchEvent);
+        
+        // for debug
         // console.log(touchEvent, "touchEvent");
         // console.log(eventTarget, "eventTarget");
     }
