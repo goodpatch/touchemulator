@@ -160,53 +160,53 @@
             // prevent mouse events
             preventMouseEvents(ev);
 
-            if (ev.which !== 1) {
-                return;
+            // firefoxは常にwhichが1のため、クリック中かどうかの判定をbuttonsで行う
+            if((typeof ev.buttons === "undefined" && ev.which === 1) || (ev.type === "mouseup" || ev.buttons === 1)) {
+              // The EventTarget on which the touch point started when it was first placed on the surface,
+              // even if the touch point has since moved outside the interactive area of that element.
+              // also, when the target doesnt exist anymore, we update it
+              if (ev.type == 'mousedown' || !eventTarget || (eventTarget && !eventTarget.dispatchEvent)) {
+                  eventTarget = ev.target;
+              }
+
+              // shiftKey has been lost, so trigger a touchend
+              if (isMultiTouch && !ev.shiftKey) {
+                  triggerTouch('touchend', ev);
+                  isMultiTouch = false;
+              }
+
+              triggerTouch(touchType, ev);
+
+              // we're entering the multi-touch mode!
+              if (!isMultiTouch && ev.shiftKey) {
+                  isMultiTouch = true;
+                  multiTouchStartPos = {
+                      pageX: ev.pageX,
+                      pageY: ev.pageY,
+                      clientX: ev.clientX,
+                      clientY: ev.clientY,
+                      screenX: ev.screenX,
+                      screenY: ev.screenY
+                  };
+                  triggerTouch('touchstart', ev);
+              }
+
+              // reset
+              if (ev.type == 'mouseup') {
+                  multiTouchStartPos = null;
+                  isMultiTouch = false;
+                  eventTarget = null;
+                  if (Object.keys(touchElements).length > 0) {
+                      for(var k in touchElements) {
+                        document.body.removeChild(touchElements[k])
+                      }
+                      touchElements = {}
+                  }
+                  document.body.classList.remove("no-cursor");
+                  document.body.classList.remove("two-point-cursor");
+              }
             }
 
-            // The EventTarget on which the touch point started when it was first placed on the surface,
-            // even if the touch point has since moved outside the interactive area of that element.
-            // also, when the target doesnt exist anymore, we update it
-            if (ev.type == 'mousedown' || !eventTarget || (eventTarget && !eventTarget.dispatchEvent)) {
-                eventTarget = ev.target;
-            }
-
-            // shiftKey has been lost, so trigger a touchend
-            if (isMultiTouch && !ev.shiftKey) {
-                triggerTouch('touchend', ev);
-                isMultiTouch = false;
-            }
-
-            triggerTouch(touchType, ev);
-
-            // we're entering the multi-touch mode!
-            if (!isMultiTouch && ev.shiftKey) {
-                isMultiTouch = true;
-                multiTouchStartPos = {
-                    pageX: ev.pageX,
-                    pageY: ev.pageY,
-                    clientX: ev.clientX,
-                    clientY: ev.clientY,
-                    screenX: ev.screenX,
-                    screenY: ev.screenY
-                };
-                triggerTouch('touchstart', ev);
-            }
-
-            // reset
-            if (ev.type == 'mouseup') {
-                multiTouchStartPos = null;
-                isMultiTouch = false;
-                eventTarget = null;
-                if (Object.keys(touchElements).length > 0) {
-                    for(var k in touchElements) {
-                      document.body.removeChild(touchElements[k])
-                    }
-                    touchElements = {}
-                }
-                document.body.classList.remove("no-cursor");
-                document.body.classList.remove("two-point-cursor");
-            }
         }
     }
 
@@ -232,8 +232,6 @@
         touchEvent.changedTouches = getChangedTouches(mouseEv, eventName);
 
         eventTarget.dispatchEvent(touchEvent);
-
-        // for debug
         // console.log(touchEvent, "touchEvent");
         // console.log(eventTarget, "eventTarget");
     }
@@ -448,6 +446,7 @@
         if(keycode === 16){
             shiftPressing = false;
             document.body.classList.remove("two-point-cursor");
+            document.body.classList.remove("no-cursor");
         }
     };
 
