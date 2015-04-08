@@ -178,7 +178,8 @@
               triggerTouch(touchType, ev);
 
               // we're entering the multi-touch mode!
-              if (!isMultiTouch && ev.shiftKey) {
+              // デバイスがwebはピンチイン・ピンチアウトなし
+              if (!isMultiTouch && ev.shiftKey && document.getElementsByClassName("pc-screen").length === 0) {
                   isMultiTouch = true;
                   multiTouchStartPos = {
                       pageX: ev.pageX,
