@@ -110,7 +110,8 @@
         //        (navigator.msMaxTouchPoints || navigator.maxTouchPoints) > 2; // pointer events
         try {
             document.createEvent("TouchEvent");
-            return true;
+            // タッチ対応端末のWindows ＋ Chormeの場合TouchEventが作れてしまうので
+            return !/Windows.*Chrome/.test(navigator.userAgent);
         } catch (e) {
             return false;
         }
