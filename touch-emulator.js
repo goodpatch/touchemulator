@@ -348,6 +348,10 @@
         }
     }
 
+    var touchstart = onMouse('touchstart');
+    var touchmove = onMouse('touchmove');
+    var touchend = onMouse('touchend');
+
     /**
      * TouchEmulator initializer
      */
@@ -360,9 +364,9 @@
 
         fakeTouchSupport();
 
-        window.addEventListener("mousedown", onMouse('touchstart'), true);
-        window.addEventListener("mousemove", onMouse('touchmove'), true);
-        window.addEventListener("mouseup", onMouse('touchend'), true);
+        window.addEventListener("mousedown", touchstart, true);
+        window.addEventListener("mousemove", touchmove, true);
+        window.addEventListener("mouseup", touchend, true);
 
         window.addEventListener("mouseenter", preventMouseEvents, true);
         window.addEventListener("mouseleave", preventMouseEvents, true);
@@ -385,9 +389,9 @@
 
         onMouseEnable = false;
 
-        window.removeEventListener("mousedown", onMouse('touchstart'), true);
-        window.removeEventListener("mousemove", onMouse('touchmove'), true);
-        window.removeEventListener("mouseup", onMouse('touchend'), true);
+        window.removeEventListener("mousedown", touchstart, true);
+        window.removeEventListener("mousemove", touchmove, true);
+        window.removeEventListener("mouseup", touchend, true);
 
         window.removeEventListener("mouseenter", preventMouseEvents, true);
         window.removeEventListener("mouseleave", preventMouseEvents, true);
