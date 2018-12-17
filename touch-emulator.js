@@ -143,8 +143,8 @@
      * @param ev
      */
     function preventMouseEvents(ev) {
-        // ev.preventDefault();
-        // ev.stopPropagation();
+        ev.preventDefault();
+        ev.stopPropagation();
     }
 
     /**
@@ -218,11 +218,6 @@
      * @param mouseEv
      */
     function triggerTouch(eventName, mouseEv) {
-        if (eventName === "touchend" &&
-            eventTarget.className &&
-            eventTarget.className.toString().split(" ").indexOf("transition") < 0) {
-            return
-        }
         var touchEvent = document.createEvent('Event');
         touchEvent.initEvent(eventName, true, true);
 
